@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import ClientLayout from "../components/ClientLayout";
+import SmoothScroll from "../components/SmoothScroll"; // Import SmoothScroll
 
 // Attempt to load some standard fonts or fallback to system
 // const inter = Inter({ subsets: ["latin"] }); 
@@ -22,7 +23,9 @@ export default function RootLayout({
         <html lang="en">
             <body className="bg-white text-slate-900 antialiased overflow-x-hidden selection:bg-gray-200 selection:text-black">
                 <ClientLayout>
-                    {children}
+                    <SmoothScroll>
+                        {children}
+                    </SmoothScroll>
                 </ClientLayout>
             </body>
         </html>

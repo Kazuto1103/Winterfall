@@ -7,12 +7,12 @@ import {
 } from "lucide-react";
 
 const menuItems = [
-    { name: "Beranda", icon: <Home size={20} /> },
-    { name: "Capaian Pendaftaran", icon: <Users size={20} /> },
-    { name: "Operator", icon: <Users size={20} /> },
-    { name: "Kisah", icon: <BookOpen size={20} /> },
+    { name: "Home", icon: <Home size={20} /> },
+    { name: "Project", icon: <Users size={20} /> },
+    { name: "Teams", icon: <Users size={20} /> },
+    { name: "Overview", icon: <BookOpen size={20} /> },
     { name: "Media", icon: <PlayCircle size={20} /> },
-    { name: "Berita", icon: <Newspaper size={20} /> },
+    { name: "News", icon: <Newspaper size={20} /> },
 ];
 
 export default function SideHUD() {
