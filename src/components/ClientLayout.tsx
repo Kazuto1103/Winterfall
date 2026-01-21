@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import EndfieldLoader from "./EndfieldLoader";
 
 export default function ClientLayout({
@@ -22,9 +23,21 @@ export default function ClientLayout({
     return (
         <>
             <EndfieldLoader isLoading={loading} />
-            <main className="relative z-0 min-h-screen">
+            <motion.main
+                className="relative z-0 min-h-screen bg-white"
+                initial={{ x: "-25%", opacity: 0 }}
+                animate={{
+                    x: loading ? "-25%" : "0%",
+                    opacity: loading ? 0 : 1
+                }}
+                transition={{
+                    duration: 0.8,
+                    ease: [0.22, 1, 0.36, 1], // Power4.out feel
+                    delay: 0.9 // Synchronized with EndfieldLoader Exits (0.2 delay + 0.8s Phase 1 scale)
+                }}
+            >
                 {children}
-            </main>
+            </motion.main>
         </>
     );
 }

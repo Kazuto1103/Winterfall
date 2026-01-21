@@ -10,6 +10,7 @@ interface EndfieldLoaderProps {
 
 const EndfieldLoader: React.FC<EndfieldLoaderProps> = ({ isLoading, onComplete }) => {
     const containerRef = useRef<HTMLDivElement>(null);
+    const bgRef = useRef<HTMLDivElement>(null); // New Ref for Background Elements
     const barRef = useRef<HTMLDivElement>(null);
     const textRef = useRef<HTMLDivElement>(null);
     const logoRef = useRef<HTMLHeadingElement>(null);
@@ -94,8 +95,15 @@ const EndfieldLoader: React.FC<EndfieldLoaderProps> = ({ isLoading, onComplete }
                     duration: 0.8,
                     ease: "power4.inOut"
                 })
-                // Hide visuals under the curtain
-                .set([logoRef.current, textRef.current, numRef.current, barRef.current, snowflakeRef.current], { opacity: 0 })
+                // HIDE ALL VISUALS (including BG) under the curtain
+                .set([
+                    logoRef.current,
+                    textRef.current,
+                    numRef.current,
+                    barRef.current,
+                    snowflakeRef.current,
+                    bgRef.current // Critical: Hide BG so reveal shows underlying page
+                ], { opacity: 0 })
 
                 // Phase 2: Vanish Left -> Right (Reveal Content)
                 .set(overlayRef.current, { transformOrigin: "right center" })
@@ -111,37 +119,50 @@ const EndfieldLoader: React.FC<EndfieldLoaderProps> = ({ isLoading, onComplete }
     return (
         <div
             ref={containerRef}
-            className="fixed inset-0 z-[9999] bg-[#050505] overflow-hidden text-white"
+            className="fixed inset-0 z-[9999] bg-transparent pointer-events-none" // Updated to transparent/pointer-events-none to avoid blocking if opacity fails
         >
-            {/* Transition Overlay */}
+            {/* The Actual Visible Container - We control this opacity via bgRef */}
+            <div ref={bgRef} className="absolute inset-0 bg-[#050505] z-0 transition-opacity">
+                {/* Background Image (Foggy Glass Effect) */}
+                <div className="absolute inset-0 z-0 overflow-hidden">
+                    <img
+                        src="/decoration/loadbackground.jpeg"
+                        alt="Background"
+                        className="w-full h-full object-cover blur-md brightness-[0.4] scale-110"
+                    />
+                    <div className="absolute inset-0 bg-black/60" />
+                </div>
+
+                {/* Background Texture (Grain) */}
+                <div className="absolute inset-0 z-0 opacity-30 mix-blend-overlay"
+                    style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22 opacity=%221%22/%3E%3C/svg%3E")' }}>
+                </div>
+
+                {/* Topographic Lines (Subtle Background) */}
+                <svg className="absolute inset-0 w-full h-full z-0 opacity-[0.1]" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <path d="M0 50 Q 25 25 50 50 T 100 50" stroke="white" strokeWidth="0.5" fill="none" />
+                    <path d="M0 70 Q 25 45 50 70 T 100 70" stroke="white" strokeWidth="0.5" fill="none" />
+                    <path d="M0 30 Q 25 55 50 30 T 100 30" stroke="white" strokeWidth="0.5" fill="none" />
+                </svg>
+
+                {/* Footer Coordinates */}
+                <div className="absolute bottom-10 right-10 font-mono text-xs text-[#77BEF0]/40 tracking-widest z-20">
+                    {coords}
+                </div>
+
+                {/* Decorative Corners */}
+                <div className="absolute top-0 right-0 w-32 h-32 border-b border-l border-white/10 z-10" />
+                <div className="absolute bottom-0 right-0 w-12 h-12 border-t border-l border-[#77BEF0]/20 z-10" />
+            </div>
+
+            {/* Transition Overlay (Must be OUTSIDE bgRef to stay visible during wipe) */}
             <div
                 ref={overlayRef}
                 className="absolute inset-0 bg-[#77BEF0] z-50 pointer-events-none"
                 style={{ transform: "scaleX(0)" }}
             />
 
-            {/* Background Image (Foggy Glass Effect) */}
-            <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-                <img
-                    src="/decoration/loadbackground.jpeg"
-                    alt="Background"
-                    className="w-full h-full object-cover blur-md brightness-[0.4] scale-110"
-                />
-                <div className="absolute inset-0 bg-black/60" /> {/* Dark overlay for readability */}
-            </div>
-
-            {/* Background Texture (Grain) */}
-            <div className="absolute inset-0 z-0 opacity-30 pointer-events-none mix-blend-overlay"
-                style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22 opacity=%221%22/%3E%3C/svg%3E")' }}>
-            </div>
-
-            {/* Topographic Lines (Subtle Background) */}
-            <svg className="absolute inset-0 w-full h-full z-0 opacity-[0.1]" viewBox="0 0 100 100" preserveAspectRatio="none">
-                <path d="M0 50 Q 25 25 50 50 T 100 50" stroke="white" strokeWidth="0.5" fill="none" />
-                <path d="M0 70 Q 25 45 50 70 T 100 70" stroke="white" strokeWidth="0.5" fill="none" />
-                <path d="M0 30 Q 25 55 50 30 T 100 30" stroke="white" strokeWidth="0.5" fill="none" />
-            </svg>
-
+            {/* Content Layers (Outside bgRef so we can control them separately if needed, but currently hidden with it) */}
             {/* Left Loading Bar Container */}
             <div className="absolute left-0 top-0 h-full w-20 pointer-events-none z-20">
                 {/* Visual Bar */}
@@ -160,10 +181,7 @@ const EndfieldLoader: React.FC<EndfieldLoaderProps> = ({ isLoading, onComplete }
 
             {/* Main Content - Right Side */}
             <div className="absolute right-[10%] bottom-[35%] z-20 flex flex-col items-end text-right">
-
-                {/* Logo Wrapper for relative positioning of snowflake */}
                 <div className="relative">
-                    {/* Snowflake Decoration - Centered on 'W' */}
                     <div
                         ref={snowflakeRef}
                         className="absolute top-1/2 left-4 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] -z-10 pointer-events-none"
@@ -190,16 +208,6 @@ const EndfieldLoader: React.FC<EndfieldLoaderProps> = ({ isLoading, onComplete }
                     </p>
                 </div>
             </div>
-
-            {/* Footer Coordinates */}
-            <div className="absolute bottom-10 right-10 font-mono text-xs text-[#77BEF0]/40 tracking-widest z-20">
-                {coords}
-            </div>
-
-            {/* Decorative Corners */}
-            <div className="absolute top-0 right-0 w-32 h-32 border-b border-l border-white/10 z-10" />
-            <div className="absolute bottom-0 right-0 w-12 h-12 border-t border-l border-[#77BEF0]/20 z-10" />
-
         </div>
     );
 };
