@@ -42,7 +42,7 @@ export default function Home() {
                                 loop
                                 muted
                                 playsInline
-                                className="object-cover w-full h-full opacity-90"
+                                className="object-cover object-[center_40%] w-full h-full opacity-90"
                             >
                                 <source src="/decoration/Home.mp4" type="video/mp4" />
                             </video>
@@ -52,7 +52,7 @@ export default function Home() {
                         {/* Title - Right Side Overlapping (Dipping Toe) */}
                         <motion.div
                             style={{ y: titleY }}
-                            className="z-10 mt-8 lg:mt-0 lg:absolute lg:right-0 lg:top-[-2.5rem] text-right mix-blend-difference pointer-events-none"
+                            className="z-10 mt-8 lg:mt-0 lg:absolute lg:right-0 lg:top-[-5.5rem] text-right mix-blend-difference pointer-events-none"
                         >
                             <p className="font-mono text-sm text-white tracking-[0.5em] uppercase mb-2 opacity-80 mr-2">
                                 Winter is Coming
