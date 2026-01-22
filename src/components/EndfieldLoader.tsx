@@ -18,18 +18,6 @@ const EndfieldLoader: React.FC<EndfieldLoaderProps> = ({ isLoading, onComplete }
     const overlayRef = useRef<HTMLDivElement>(null);
     const snowflakeRef = useRef<HTMLDivElement>(null);
 
-    const [coords, setCoords] = useState("LAT: 00.000 / LONG: 00.000");
-
-    // Random coordinates effect
-    useEffect(() => {
-        const interval = setInterval(() => {
-            const lat = (Math.random() * 180 - 90).toFixed(3);
-            const long = (Math.random() * 360 - 180).toFixed(3);
-            setCoords(`LAT: ${lat} / LONG: ${long}`);
-        }, 150);
-        return () => clearInterval(interval);
-    }, []);
-
     useEffect(() => {
         const tl = gsap.timeline();
         const progressObj = { value: 0 };
@@ -145,14 +133,7 @@ const EndfieldLoader: React.FC<EndfieldLoaderProps> = ({ isLoading, onComplete }
                     <path d="M0 30 Q 25 55 50 30 T 100 30" stroke="white" strokeWidth="0.5" fill="none" />
                 </svg>
 
-                {/* Footer Coordinates */}
-                <div className="absolute bottom-10 right-10 font-mono text-xs text-[#77BEF0]/40 tracking-widest z-20">
-                    {coords}
-                </div>
-
-                {/* Decorative Corners */}
-                <div className="absolute top-0 right-0 w-32 h-32 border-b border-l border-white/10 z-10" />
-                <div className="absolute bottom-0 right-0 w-12 h-12 border-t border-l border-[#77BEF0]/20 z-10" />
+                {/* Decorative Corners - Removed */}
             </div>
 
             {/* Transition Overlay (Must be OUTSIDE bgRef to stay visible during wipe) */}

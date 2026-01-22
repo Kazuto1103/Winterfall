@@ -2,6 +2,7 @@
 
 import SideHUD from "../components/SideHUD";
 import { motion, useScroll, useTransform } from "framer-motion"; // Added hooks
+import ParallaxFrame from "../components/ParallaxFrame"; // Import Component
 
 const Card = ({ children, title, tag }: { children: React.ReactNode, title: string, tag?: string }) => (
     <div className="relative bg-gray-50 p-6 lg:p-8 hover:bg-white hover:shadow-xl transition-all duration-300 border border-transparent hover:border-gray-100">
@@ -18,30 +19,57 @@ export default function Home() {
     const y1 = useTransform(scrollY, [0, 1000], [0, 200]);
     const y2 = useTransform(scrollY, [0, 1000], [0, -150]);
 
+    // Parallax for the video frame
+    const videoY = useTransform(scrollY, [0, 1000], [0, 100]);
+    // Opposing movement for the title to create depth
+    const titleY = useTransform(scrollY, [0, 1000], [0, -50]);
+
     return (
         <div className="min-h-screen bg-[#F5F2F2] text-slate-900 selection:bg-gray-200">
             <SideHUD />
 
             <main className="pl-28 pr-12 py-16 min-h-screen transition-all duration-300">
-                {/* Header Section */}
-                <div className="mb-16">
-                    <p className="font-mono text-xs text-slate-400 tracking-widest uppercase mb-4">
-                        / Winterfall Initiative
-                    </p>
-                    <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter text-slate-900 leading-[0.9]">
-                        WINTERFALL <br />
-                        <span className="text-slate-300">DEVS</span>
-                    </h1>
+                {/* Hero Section */}
+                <div className="relative mb-32 pt-12">
+                    <div className="flex flex-col lg:flex-row items-center relative justify-center">
+                        {/* Video Frame - Left Side (Widened) */}
+                        <ParallaxFrame
+                            y={videoY}
+                            className="w-full lg:w-[90%] max-w-[90rem] aspect-[21/9]"
+                        >
+                            <video
+                                autoPlay
+                                loop
+                                muted
+                                playsInline
+                                className="object-cover w-full h-full opacity-90"
+                            >
+                                <source src="/decoration/Home.mp4" type="video/mp4" />
+                            </video>
+                            <div className="absolute inset-0 bg-blue-900/10 mix-blend-overlay"></div>
+                        </ParallaxFrame>
+
+                        {/* Title - Right Side Overlapping (Dipping Toe) */}
+                        <motion.div
+                            style={{ y: titleY }}
+                            className="z-10 mt-8 lg:mt-0 lg:absolute lg:right-0 lg:top-[-2.5rem] text-right mix-blend-difference pointer-events-none"
+                        >
+                            <p className="font-mono text-sm text-white tracking-[0.5em] uppercase mb-2 opacity-80 mr-2">
+                                Winter is Coming
+                            </p>
+                            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter text-white leading-none -ml-20">
+                                WINTERFALL
+                            </h1>
+                        </motion.div>
+                    </div>
                 </div>
 
                 {/* Dashboard Grid with Parallax Stagger */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {/* Column 1 - Fast Parallax */}
                     <motion.div style={{ y: y1 }} className="space-y-6">
-                        <Card title="Latest Update" tag="01">
-                            <div className="h-40 bg-gray-100 rounded-sm mb-4"></div>
-                            <p className="text-sm text-slate-500 leading-relaxed">System architecture updated to v2.4. New modules available for deployment.</p>
-                        </Card>
+                        {/* REMOVED: Latest Update Card */}
+
                         <Card title="System Status" tag="02">
                             <div className="flex items-center gap-4 mb-2">
                                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
