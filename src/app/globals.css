@@ -2,13 +2,94 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-    --foreground-rgb: 0, 0, 0;
-    --background-start-rgb: 255, 255, 255;
-    --background-end-rgb: 255, 255, 255;
+@layer base {
+  :root {
+    /* ==========================================
+       THEME: BASE COLOR PALETTE
+       Format: H S L (Hue Saturation Lightness)
+       Allows for opacity modifiers (e.g. bg-primary/50)
+       ========================================== */
+
+    /* [Main Background & Text] */
+    --background: 0 0% 96%; /* #F5F2F2 - Light Gray */
+    --foreground: 222.2 84% 4.9%; /* Slate-900 */
+
+    /* [Card / Surface Colors] */
+    --card: 0 0% 100%; /* White */
+    --card-foreground: 222.2 84% 4.9%;
+
+    /* [Popovers / Modals] */
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    /* [Primary Brand Color] */
+    --primary: 221.2 83.2% 53.3%; /* Blue-600 */
+    --primary-foreground: 210 40% 98%;
+
+    /* [Secondary / Accent Color] */
+    --secondary: 191.6 91.4% 36.9%; /* Cyan-600 */
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    /* [Muted / Subtles] */
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    /* [UI Accents] */
+    --accent: 199 89% 48%; /* Sky Blue */
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    /* [Destructive / Error] */
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    /* [Borders & Inputs] */
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+
+    /* [Radius] */
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* ==========================================
+       THEME: DARK MODE OVERRIDES
+       ========================================== */
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
+  }
 }
 
-body {
-    color: rgb(var(--foreground-rgb));
-    background: rgb(var(--background-start-rgb));
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }

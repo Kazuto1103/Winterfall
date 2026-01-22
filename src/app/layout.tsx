@@ -21,7 +21,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className="bg-white text-slate-900 antialiased overflow-x-hidden selection:bg-gray-200 selection:text-black">
+            <body className="bg-background text-foreground antialiased overflow-x-hidden selection:bg-accent selection:text-accent-foreground">
                 <ClientLayout>
                     <SmoothScroll>
                         {children}

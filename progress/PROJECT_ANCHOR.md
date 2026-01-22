@@ -33,5 +33,22 @@
 - **Assets:** `public/decoration/` contains Key Visuals.
 - **Git:** `.gitignore` configured for Next.js.
 
+### [Progress 2]: Endfield Minimalist Overhaul
+**Date:** 2026-01-21
+**Status:** Completed
+
+#### Features Implemented
+- **Visuals:** Switched to "Endfield Minimalist" Light Theme (`#F5F2F2`, Cyan Accents).
+- **Navigation:** Refactored `SideHUD` to "Click-to-Expand" interaction; scrollbars hidden.
+- **Motion:**
+    - **Cinematic Transition:** Synchronized "Slide Push Right" with Loader curtain.
+    - **Smooth Scroll:** Implemented via `@studio-freight/react-lenis`.
+    - **Parallax:** Multi-speed column scrolling on Dashboard.
+- **Reliability:** Added `error.tsx` components.
+
+#### Tech Stack Updates
+- **Libraries:** Added `@studio-freight/react-lenis`.
+- **Logic:** Extensive use of `framer-motion` hooks (`useScroll`, `useTransform`).
+
 ## 📝 Next Steps / Backlog
 - [ ] (Future implementation steps...)
