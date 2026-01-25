@@ -2,8 +2,9 @@
 
 import React from "react";
 import SideHUD from "../components/SideHUD";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion"; // Added hooks
-import ParallaxFrame from "../components/ParallaxFrame"; // Import Component
+import { motion, useScroll, useTransform, useSpring, useAnimation } from "framer-motion";
+import ParallaxFrame from "../components/ParallaxFrame";
+import { useLoading } from "../components/ClientLayout";
 
 const Card = ({ children, title, tag }: { children: React.ReactNode, title: string, tag?: string }) => (
     <div className="relative bg-gray-50 p-6 lg:p-8 hover:bg-white hover:shadow-xl transition-all duration-300 border border-transparent hover:border-gray-100">
@@ -16,7 +17,26 @@ const Card = ({ children, title, tag }: { children: React.ReactNode, title: stri
 );
 
 export default function Home() {
-    // 1. Configure the Scroll Container
+    // 1. Entry Animation Logic
+    const controls = useAnimation();
+    const titleControls = useAnimation();
+    const { isLoading } = useLoading();
+    const [wasLoadingInitially] = React.useState(isLoading);
+
+    React.useEffect(() => {
+        if (!isLoading) {
+            const delay = wasLoadingInitially ? 1.2 : 0;
+            // Frame Animation
+            controls.start({ opacity: 1, scale: 1, transition: { duration: 1.5, ease: "easeOut", delay } });
+            // Title Animation - Slight extra delay to ensure background is stable for blend mode
+            titleControls.start({ opacity: 1, transition: { duration: 1.2, ease: "easeOut", delay: delay + 0.3 } });
+        } else {
+            controls.set({ opacity: 0, scale: 0.95 });
+            titleControls.set({ opacity: 0 });
+        }
+    }, [isLoading, controls, titleControls, wasLoadingInitially]);
+
+    // 2. Configure the Scroll Container
     const containerRef = React.useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll({
         target: containerRef,
@@ -49,7 +69,6 @@ export default function Home() {
     const dashboardOpacity = useTransform(scrollYProgress, [0.4, 0.6], [0, 1]);
 
     // Title Parallax (Micro-movement)
-    // Title Parallax (Micro-movement)
     // Reduced significantly to "stay in place"
     const titleY = useTransform(scrollYProgress, [0, 1], [0, -20]);
 
@@ -79,49 +98,57 @@ export default function Home() {
                     <div
                         className="absolute inset-0 flex items-center justify-center pointer-events-none"
                     >
+                        {/* Relative Container for Frame + Title */}
                         <div className="relative w-full lg:w-[80%] max-w-[80rem] aspect-[21/9] pointer-events-auto mt-16">
 
-                            {/* 1. FRAME & VIDEO */}
-                            <ParallaxFrame className="w-full h-full relative z-0">
-                                <img
-                                    src="/decoration/home.gif"
-                                    alt="Winterfall Hero Background"
-                                    className="object-cover object-[center_40%] w-full h-full opacity-90"
-                                />
-                                <div className="absolute inset-0 bg-blue-900/10 mix-blend-overlay"></div>
+                            {/* 1. FRAME & VIDEO (Animated Scale/Opacity) */}
+                            <motion.div
+                                className="w-full h-full relative z-0"
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={controls}
+                            >
+                                <ParallaxFrame className="w-full h-full relative z-0">
+                                    <img
+                                        src="/decoration/home.gif"
+                                        alt="Winterfall Hero Background"
+                                        className="absolute inset-0 w-full h-full object-cover"
+                                    />
+                                    <div className="absolute inset-0 bg-blue-900/10 mix-blend-overlay"></div>
 
-                                {/* 2. THE CURTAINS (Diagonal Split) */}
-                                {/* Top-Left Triangle */}
-                                <motion.div
-                                    style={{ x: cover1X, y: cover1Y }}
-                                    className="absolute inset-0 bg-[#F5F2F2] z-20 [clip-path:polygon(0_0,100%_0,0_100%)]"
-                                >
-                                    <div className="absolute bottom-1/2 right-1/2 translate-x-0 translate-y-0 opacity-30 whitespace-nowrap -rotate-[23.2deg] origin-bottom-right z-30">
-                                        <p className="font-mono text-xs uppercase tracking-[0.5em] font-bold relative">
-                                            Love For Game, Game For Love
-                                            <span className="absolute left-full top-1/2 -translate-y-1/2 w-96 h-[1px] bg-black ml-4" />
-                                        </p>
-                                    </div>
-                                </motion.div>
+                                    {/* 2. THE CURTAINS (Diagonal Split) */}
+                                    {/* Top-Left Triangle */}
+                                    <motion.div
+                                        style={{ x: cover1X, y: cover1Y }}
+                                        className="absolute inset-0 bg-[#F5F2F2] z-20 [clip-path:polygon(0_0,100%_0,0_100%)]"
+                                    >
+                                        <div className="absolute bottom-1/2 right-1/2 translate-x-0 translate-y-0 opacity-30 whitespace-nowrap -rotate-[23.2deg] origin-bottom-right z-30">
+                                            <p className="font-mono text-xs uppercase tracking-[0.5em] font-bold relative">
+                                                Love For Game, Game For Love
+                                                <span className="absolute left-full top-1/2 -translate-y-1/2 w-96 h-[1px] bg-black ml-4" />
+                                            </p>
+                                        </div>
+                                    </motion.div>
 
-                                {/* Bottom-Right Triangle */}
-                                <motion.div
-                                    style={{ x: cover2X, y: cover2Y }}
-                                    className="absolute inset-0 bg-[#F5F2F2] z-20 [clip-path:polygon(100%_100%,100%_0,0_100%)]"
-                                >
-                                    <div className="absolute top-1/2 left-1/2 translate-x-0 translate-y-0 opacity-30 whitespace-nowrap -rotate-[23.2deg] origin-top-left z-30">
-                                        <p className="font-mono text-xs uppercase tracking-[0.5em] font-bold relative">
-                                            <span className="absolute right-full top-1/2 -translate-y-1/2 w-96 h-[1px] bg-black mr-4" />
-                                            Game Developer
-                                        </p>
-                                    </div>
-                                </motion.div>
-                            </ParallaxFrame>
+                                    {/* Bottom-Right Triangle */}
+                                    <motion.div
+                                        style={{ x: cover2X, y: cover2Y }}
+                                        className="absolute inset-0 bg-[#F5F2F2] z-20 [clip-path:polygon(100%_100%,100%_0,0_100%)]"
+                                    >
+                                        <div className="absolute top-1/2 left-1/2 translate-x-0 translate-y-0 opacity-30 whitespace-nowrap -rotate-[23.2deg] origin-top-left z-30">
+                                            <p className="font-mono text-xs uppercase tracking-[0.5em] font-bold relative">
+                                                <span className="absolute right-full top-1/2 -translate-y-1/2 w-96 h-[1px] bg-black mr-4" />
+                                                Game Developer
+                                            </p>
+                                        </div>
+                                    </motion.div>
+                                </ParallaxFrame>
+                            </motion.div>
 
-                            {/* 3. TITLE (Outside Frame, Top Layer) */}
-                            {/* "Dipping Toe" styling - overlaps top right */}
+                            {/* 3. TITLE (Outside Frame, Animated Opacity Only) */}
                             <motion.div
                                 style={{ y: titleY }}
+                                initial={{ opacity: 0 }}
+                                animate={titleControls}
                                 className="absolute right-[-2%] top-[-10%] lg:right-[-2rem] lg:top-[-4rem] z-30 text-right mix-blend-difference pointer-events-none"
                             >
                                 <p className="font-mono text-xs md:text-sm text-white tracking-[0.5em] uppercase mb-2 opacity-80 mr-2">
