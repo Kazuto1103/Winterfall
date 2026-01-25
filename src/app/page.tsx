@@ -33,7 +33,7 @@ export default function Home() {
 
     // Curtain Movements (Diagonal Pull)
     // The gap is created by starting with a small offset
-    const gapSize = "2%";
+    const gapSize = "1%";
 
     // Top-Left Triangle (Moves Up & Left)
     const cover1X = useTransform(smoothProgress, [0, 1], [`-${gapSize}`, "-100%"]);
@@ -76,7 +76,9 @@ export default function Home() {
                     <SideHUD />
 
                     {/* HERO SECTION - Centered & Pinned */}
-                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div
+                        className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                    >
                         <div className="relative w-full lg:w-[80%] max-w-[80rem] aspect-[21/9] pointer-events-auto mt-16">
 
                             {/* 1. FRAME & VIDEO */}
@@ -92,11 +94,12 @@ export default function Home() {
                                 {/* Top-Left Triangle */}
                                 <motion.div
                                     style={{ x: cover1X, y: cover1Y }}
-                                    className="absolute inset-0 bg-[#F5F2F2] z-20 [clip-path:polygon(0_0,100%_0,0_100%)] flex items-center justify-start pl-12 md:pl-24"
+                                    className="absolute inset-0 bg-[#F5F2F2] z-20 [clip-path:polygon(0_0,100%_0,0_100%)]"
                                 >
-                                    <div className="opacity-20 whitespace-nowrap -rotate-[23deg] translate-y-12">
-                                        <p className="font-mono text-xs uppercase tracking-[0.5em] font-bold">
+                                    <div className="absolute bottom-1/2 right-1/2 translate-x-0 translate-y-0 opacity-30 whitespace-nowrap -rotate-[23.2deg] origin-bottom-right z-30">
+                                        <p className="font-mono text-xs uppercase tracking-[0.5em] font-bold relative">
                                             Love For Game, Game For Love
+                                            <span className="absolute left-full top-1/2 -translate-y-1/2 w-96 h-[1px] bg-black ml-4" />
                                         </p>
                                     </div>
                                 </motion.div>
@@ -104,10 +107,11 @@ export default function Home() {
                                 {/* Bottom-Right Triangle */}
                                 <motion.div
                                     style={{ x: cover2X, y: cover2Y }}
-                                    className="absolute inset-0 bg-[#F5F2F2] z-20 [clip-path:polygon(100%_100%,100%_0,0_100%)] flex items-center justify-end pr-12 md:pr-24"
+                                    className="absolute inset-0 bg-[#F5F2F2] z-20 [clip-path:polygon(100%_100%,100%_0,0_100%)]"
                                 >
-                                    <div className="opacity-20 whitespace-nowrap -rotate-[23deg] -translate-y-12">
-                                        <p className="font-mono text-xs uppercase tracking-[0.5em] font-bold">
+                                    <div className="absolute top-1/2 left-1/2 translate-x-0 translate-y-0 opacity-30 whitespace-nowrap -rotate-[23.2deg] origin-top-left z-30">
+                                        <p className="font-mono text-xs uppercase tracking-[0.5em] font-bold relative">
+                                            <span className="absolute right-full top-1/2 -translate-y-1/2 w-96 h-[1px] bg-black mr-4" />
                                             Game Developer
                                         </p>
                                     </div>
