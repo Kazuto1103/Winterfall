@@ -15,9 +15,14 @@ const menuItems = [
     { name: "News", icon: <Newspaper size={20} /> },
 ];
 
-export default function SideHUD() {
+interface SideHUDProps {
+    activeIndex?: number;
+    onNavigate?: (index: number) => void;
+}
+
+export default function SideHUD({ activeIndex = 0, onNavigate }: SideHUDProps) {
     const [isExpanded, setIsExpanded] = useState(false);
-    const [activeIndex, setActiveIndex] = useState(0);
+    // const [activeIndex, setActiveIndex] = useState(0); // Controlled by parent now
 
     return (
         <motion.div
@@ -39,7 +44,7 @@ export default function SideHUD() {
                 {menuItems.map((item, index) => (
                     <div
                         key={item.name}
-                        onClick={() => setActiveIndex(index)}
+                        onClick={() => onNavigate?.(index)}
                         className={`group relative flex items-center p-2.5 cursor-pointer rounded-sm transition-all duration-200 ${activeIndex === index
                             ? "bg-gray-100"
                             : "hover:bg-gray-50"
